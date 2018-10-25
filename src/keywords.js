@@ -1,20 +1,26 @@
-const { FUNCTION, INT, STR, IDENT, RETURN } = require('./tokenTypes');
+const tokenTypes = require('./tokenTypes');
 
 const keywords = {
-    'fn': FUNCTION,
-    'int': INT,
-    'str': STR,
-    'return': RETURN
+    'fn': tokenTypes.FUNCTION,
+    'int': tokenTypes.INT,
+    'str': tokenTypes.STR,
+    'return': tokenTypes.RETURN,
+    'if': tokenTypes.IF,
+    'else': tokenTypes.ELSE,
+    'true': tokenTypes.TRUE,
+    'false': tokenTypes.FALSE,
+    'and': tokenTypes.AND,
+    'or': tokenTypes.OR,
+    'not': tokenTypes.NOT,
+    'in': tokenTypes.IN
 };
 
 const lookUpIdentifier = ident => {
-    for (let kw in keywords) {
-        if (ident === kw) {
-            return keywords[kw];
-        }
+    if (ident in keywords) {
+        return keywords[ident];
     }
 
-    return IDENT;
+    return tokenTypes.IDENT;
 };
 
 module.exports = lookUpIdentifier;
