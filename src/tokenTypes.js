@@ -20,7 +20,8 @@ const INTEGER = 'INTEGER',
       LBRACE = 'LBRACE',
       RBRACE = 'RBRACE',
       SEMICOLON = 'SEMICOLON',
-      COMMA = 'COMMA';
+      COMMA = 'COMMA',
+      RETURN = 'RETURN';
 
 module.exports = { INTEGER,
     PLUS,
@@ -37,6 +38,7 @@ module.exports = { INTEGER,
     LBRACE,
     RBRACE,
     SEMICOLON,
-    COMMA
+    COMMA,
+    RETURN,
 };
 

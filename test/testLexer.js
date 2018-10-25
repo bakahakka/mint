@@ -7,22 +7,24 @@ const { INTEGER,
     IDENT,
     FUNCTION,
     INT,
+    STR,
     LPAREN,
     RPAREN,
     LBRACE,
     RBRACE,
     SEMICOLON,
-    COMMA
+    COMMA,
+    RETURN,
 } = require('../src/tokenTypes');
 const Token = require('../src/Token');
 
 describe('Lexer', () => {
     it('should break up the source code into tokens', () => {
        const input = `int number = 5;
-       
-       int add = fn(int x, int y) {
-           x + y
-       };
+str string;       
+int add = fn(int x, int y) {
+    return x + y;
+};
        `;
 
        const expectedTokens = [
@@ -30,6 +32,9 @@ describe('Lexer', () => {
            new Token(IDENT, 'number'),
            new Token(ASSIGN, '='),
            new Token(INTEGER, '5'),
+           new Token(SEMICOLON, ';'),
+           new Token(STR, 'str'),
+           new Token(IDENT, 'string'),
            new Token(SEMICOLON, ';'),
            new Token(INT, 'int'),
            new Token(IDENT, 'add'),
@@ -43,9 +48,11 @@ describe('Lexer', () => {
            new Token(IDENT, 'y'),
            new Token(RPAREN, ')'),
            new Token(LBRACE, '{'),
+           new Token(RETURN, 'return'),
            new Token(IDENT, 'x'),
            new Token(PLUS, '+'),
            new Token(IDENT, 'y'),
+           new Token(SEMICOLON, ';'),
            new Token(RBRACE, '}'),
            new Token(SEMICOLON, ';'),
            new Token(EOF, ''),
