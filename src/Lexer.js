@@ -55,51 +55,33 @@ class Lexer {
         let token;
 
         this.skipWhiteSpace();
-        switch(this.char) {
-            case '+':
-                token = new Token(PLUS, this.char);
-                break;
-            case '-':
-                token = new Token(MINUS, this.char);
-                break;
-            case '=':
-                token = new Token(ASSIGN, this.char);
-                break;
-            case '(':
-                token = new Token(LPAREN, this.char);
-                break;
-            case ')':
-                token = new Token(RPAREN, this.char);
-                break;
-            case '{':
-                token = new Token(LBRACE, this.char);
-                break;
-            case '}':
-                token = new Token(RBRACE, this.char);
-                break;
-            case ';':
-                token = new Token(SEMICOLON, this.char);
-                break;
-            case ',':
-                token = new Token(COMMA, this.char);
-                break;
-            case 0:
-                token = new Token(EOF, '');
-                break;
-            default:
-                if (this.isLetter(this.char)) {
-                    token = new Token();
-                    token.value = this.readIdentifier();
-                    token.type = lookUpIdentifier(token.value);
-                    return token;
-                } else if (this.isNumber(this.char)) {
-                    token = new Token();
-                    token.value = this.readNumber();
-                    token.type = INTEGER;
-                    return token;
-                } else {
-                    token = new Token(ILLEGAL, '');
-                }
+
+        let chars = {
+            '+': new Token(PLUS, '+'),
+            '-': new Token(MINUS, '-'),
+            '=': new Token(ASSIGN, '='),
+            '(': new Token(LPAREN, '('),
+            ')': new Token(RPAREN, ')'),
+            '{': new Token(LBRACE, '{'),
+            '}': new Token(RBRACE, '}'),
+            ';': new Token(SEMICOLON, ';'),
+            ',': new Token(COMMA, ','),
+            0: new Token(EOF, ''),
+        };
+
+        if (this.char in chars) {
+            token = chars[this.char];
+        } else {
+            if (this.isLetter(this.char)) {
+                let value = this.readIdentifier();
+                token = new Token(lookUpIdentifier(value), value);
+                return token;
+            } else if (this.isNumber(this.char)) {
+                token = new Token(INTEGER, this.readNumber());
+                return token;
+            } else {
+                token = new Token(ILLEGAL, '');
+            }
         }
 
         this.readChar();
