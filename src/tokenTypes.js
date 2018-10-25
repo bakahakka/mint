@@ -7,6 +7,36 @@
 
 const INTEGER = 'INTEGER',
       PLUS = 'PLUS',
-      EOF = 'EOF';
+      EOF = 'EOF',
+      MINUS = 'MINUS',
+      ASSIGN = 'ASSIGN',
+      ILLEGAL = 'ILLEGAL',
+      IDENT = 'IDENT',
+      FUNCTION = 'FUNCTION',
+      INT = 'INT',
+      STR = 'STR',
+      LPAREN = 'LPAREN',
+      RPAREN = 'LPAREN',
+      LBRACE = 'LBRACE',
+      RBRACE = 'RBRACE',
+      SEMICOLON = 'SEMICOLON',
+      COMMA = 'COMMA';
 
-module.exports = { INTEGER, PLUS, EOF };
+module.exports = { INTEGER,
+    PLUS,
+    EOF,
+    MINUS,
+    ASSIGN,
+    ILLEGAL,
+    IDENT,
+    FUNCTION,
+    INT,
+    STR,
+    LPAREN,
+    RPAREN,
+    LBRACE,
+    RBRACE,
+    SEMICOLON,
+    COMMA
+};
+

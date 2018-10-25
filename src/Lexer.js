@@ -1,70 +1,140 @@
-const { INTEGER, PLUS, EOF } = require('./tokenTypes');
+const { INTEGER,
+    PLUS,
+    EOF,
+    MINUS,
+    ASSIGN,
+    ILLEGAL,
+    IDENT,
+    FUNCTION,
+    INT,
+    STR,
+    LPAREN,
+    RPAREN,
+    LBRACE,
+    RBRACE,
+    SEMICOLON,
+    COMMA
+} = require('./tokenTypes');
+const lookUpIdentifier = require('./keywords');
 const Token = require('./Token');
 
 /**
  * @param {String} input - User string input
- * @param {Number} position - An index in input
- * @param {null|Token} currentToken - Current token instance
+ * @param {Number} position - A current index in input
+ * @param {Number} readPosition -- A next index in input
+ * @param {char} -- Current character
  */
 class Lexer {
     constructor(input) {
         this.input = input;
         this.position = 0;
-        this.currentToken = null;
+        this.readPosition = 0;
+        this.char = null;
 
-        this.error = this.error.bind(this);
-        this.getNextToken = this.getNextToken.bind(this);
-        this.eat = this.eat.bind(this);
-        this.expr = this.expr.bind(this);
+        this.readChar();
     }
 
-    error() {
-        throw new Error('Error parsing input');
-    }
-
-    getNextToken() {
-        if (this.position > this.input.length - 1) {
-            return new Token(EOF, null);
-        }
-
-        let currentChar = this.input[this.position];
-
-        if (!isNaN(currentChar)) {
-            let token = new Token(INTEGER, parseInt(currentChar, 10));
-            this.position += 1;
-            return token;
-        }
-
-        if (currentChar === '+') {
-            let token = new Token(PLUS, currentChar);
-            this.position += 1;
-            return token;
-        }
-
-        this.error();
-    }
-
-    eat(tokenType) {
-        if (this.currentToken.type === tokenType) {
-            this.currentToken = this.getNextToken();
+    readChar() {
+        if (this.readPosition >= this.input.length) {
+            this.char = 0;
         } else {
-            this.error();
+            this.char = this.input[this.readPosition];
+        }
+        this.position = this.readPosition;
+        this.readPosition += 1;
+    }
+
+    skipWhiteSpace() {
+        while(this.char === ' ' ||
+        this.char === '\t' ||
+        this.char === '\n' ||
+        this.char === '\r') {
+
+            this.readChar();
+
         }
     }
 
-    expr() {
-        this.currentToken = this.getNextToken();
+    nextToken() {
+        let token;
 
-        let left = this.currentToken;
-        this.eat(INTEGER);
+        this.skipWhiteSpace();
+        switch(this.char) {
+            case '+':
+                token = new Token(PLUS, this.char);
+                break;
+            case '-':
+                token = new Token(MINUS, this.char);
+                break;
+            case '=':
+                token = new Token(ASSIGN, this.char);
+                break;
+            case '(':
+                token = new Token(LPAREN, this.char);
+                break;
+            case ')':
+                token = new Token(RPAREN, this.char);
+                break;
+            case '{':
+                token = new Token(LBRACE, this.char);
+                break;
+            case '}':
+                token = new Token(RBRACE, this.char);
+                break;
+            case ';':
+                token = new Token(SEMICOLON, this.char);
+                break;
+            case ',':
+                token = new Token(COMMA, this.char);
+                break;
+            case 0:
+                token = new Token(EOF, '');
+                break;
+            default:
+                if (this.isLetter(this.char)) {
+                    token = new Token();
+                    token.value = this.readIdentifier();
+                    token.type = lookUpIdentifier(token.value);
+                    return token;
+                } else if (this.isNumber(this.char)) {
+                    token = new Token();
+                    token.value = this.readNumber();
+                    token.type = INTEGER;
+                    return token;
+                } else {
+                    token = new Token(ILLEGAL, '');
+                }
+        }
 
-        let operator = this.currentToken;
-        this.eat(PLUS);
+        this.readChar();
+        return token;
+    }
 
-        let right = this.currentToken;
-        this.eat(INTEGER);
+    readIdentifier() {
+        let position = this.position;
+        while (this.isLetter(this.char)) {
+            this.readChar();
+        }
 
-        return left.value + right.value;
+        return this.input.slice(position, this.position);
+    }
+
+    isLetter(char) {
+        return 'a' <= char && char <= 'z' ||
+               'A' <= char && char <= 'Z' ||
+               char === '_'
+    }
+
+    readNumber() {
+        let position = this.position;
+        while (this.isNumber(this.char)) {
+            this.readChar();
+        }
+        return this.input.slice(position, this.position);
+    }
+
+    isNumber(char) {
+        return !isNaN(char);
     }
 }
 

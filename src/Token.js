@@ -7,8 +7,6 @@ class Token {
     constructor(type, value ) {
         this.type = type;
         this.value = value;
-
-        this.toString = this.toString.bind(this);
     }
 
     /**
