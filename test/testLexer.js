@@ -1,7 +1,7 @@
 const assert = require('assert');
 const Lexer = require('../src/Lexer');
-const tokenTypes = require('../src/tokenTypes');
-const Token = require('../src/Token');
+const tokenTypes = require('../src/token/tokenTypes');
+const Token = require('../src/token/Token');
 
 describe('Lexer', () => {
     it('should break up the source code into tokens', () => {

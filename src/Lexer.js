@@ -1,6 +1,6 @@
-const tokenTypes = require('./tokenTypes');
-const lookUpIdentifier = require('./keywords');
-const Token = require('./Token');
+const tokenTypes = require('./token/tokenTypes');
+const lookUpIdentifier = require('./token/keywords');
+const Token = require('./token/Token');
 
 /**
  * @param {String} input - User string input

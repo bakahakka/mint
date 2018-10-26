@@ -1,15 +1,11 @@
-const readline = require('readline');
-const Lexer = require('./src/Lexer');
+const execFile = require('./src/io/execFile');
+const repl = require('./src/io/repl');
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-});
-
-rl.question('Mint shell v0.0.0.1 > ', (answer) => {
-   let lexer = new Lexer(answer);
-   let result = lexer.expr();
-   console.log(`#=> ${result}`);
-   rl.close();
-});
+// Start REPL or read from file
+if (process.argv.length > 2) {
+    let path = process.argv[2];
+    execFile(path);
+} else {
+    repl(process.stdin, process.stdout);
+}
 
