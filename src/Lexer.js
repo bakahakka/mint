@@ -81,18 +81,18 @@ class Lexer {
         };
 
         let compareAndAssignOps = {
-            '=': ['ASSIGN', 'EQ'],
-            '+': ['PLUS', 'PLUS_ASSIGN'],
-            '-': ['MINUS', 'MINUS_ASSIGN'],
-            '/': ['BSLASH', 'DIV_ASSIGN'],
-            '*': ['ASTERISK', 'MUL_ASSIGN'],
-            '%': ['MODULO', 'MODULO_ASSIGN'],
-            '>': ['GT', 'GT_OR_EQ'],
-            '<': ['LT', 'LT_OR_EQ'],
-            '&': ['B_AND', 'B_AND_ASSIGN'],
-            '^': ['XOR', 'XOR_ASSIGN'],
-            '|': ['B_OR', 'B_OR_ASSIGN'],
-            '!': ['BANG', 'NOT_EQ']
+            '=': [tokenTypes.ASSIGN, tokenTypes.EQ],
+            '+': [tokenTypes.PLUS, tokenTypes.PLUS_ASSIGN],
+            '-': [tokenTypes.MINUS, tokenTypes.MINUS_ASSIGN],
+            '/': [tokenTypes.BSLASH, tokenTypes.DIV_ASSIGN],
+            '*': [tokenTypes.ASTERISK, tokenTypes.MUL_ASSIGN],
+            '%': [tokenTypes.MODULO, tokenTypes.MODULO_ASSIGN],
+            '>': [tokenTypes.GT, tokenTypes.GT_OR_EQ, tokenTypes.RSHIFT],
+            '<': [tokenTypes.LT, tokenTypes.LT_OR_EQ, tokenTypes.LSHIFT],
+            '&': [tokenTypes.B_AND, tokenTypes.B_AND_ASSIGN],
+            '^': [tokenTypes.XOR, tokenTypes.XOR_ASSIGN],
+            '|': [tokenTypes.B_OR, tokenTypes.B_OR_ASSIGN],
+            '!': [tokenTypes.BANG, tokenTypes.NOT_EQ]
         };
 
         if (this.char in delimiters) {
@@ -102,6 +102,13 @@ class Lexer {
                 let char = this.char;
                 this.readChar();
                 token = new Token(compareAndAssignOps[char][1], `${char}${this.char}`)
+            // Bitwise shifts
+            } else if ((this.char === '>' && this.peekChar() === '>') ||
+                (this.char === '<' && this.peekChar() === '<')) {
+
+                let char = this.char;
+                this.readChar();
+                token = new Token(compareAndAssignOps[char][2], `${char}${this.char}`);
             } else {
                 token = new Token(compareAndAssignOps[this.char][0], this.char);
             }

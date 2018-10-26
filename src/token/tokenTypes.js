@@ -33,6 +33,8 @@ const tokenTypes = {
     NOT_EQ: 'NOT_EQ',
     GT_OR_EQ: 'GT_OR_EQ',
     LT_OR_EQ: 'LT_OR_EQ',
+    LSHIFT: 'LSHIFT',
+    RSHIFT: 'RSHIFT',
     BSLASH : 'BSLASH',
     /** Identifiers & literals */
     IDENT : 'IDENT',

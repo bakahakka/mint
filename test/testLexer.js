@@ -4,7 +4,7 @@ const tokenTypes = require('../src/token/tokenTypes');
 const Token = require('../src/token/Token');
 
 describe('Lexer', () => {
-    it('should break up the source code into tokens', () => {
+    it('should consume and tokenize keywords, identifiers and literals', () => {
        const input = `int number = 5;
 
 str string;
@@ -21,25 +21,8 @@ int sub = fn(int x, int y) {
 
 int result = sub(10, 5);
 
-if sum > result or not true {
-   return true
-} else {
-   return 5 % 2 and 1 in 4 
-}
-
 false
-
-int[] array = [1, 2, 3];
-
-1 == false
-
-2 >= 3
-
-4 <= 6
-
-7 != true
-
-!*/\\><&^|:`;
+`;
 
        const expectedTokens = [
            new Token(tokenTypes.INT, 'int'),
@@ -108,65 +91,7 @@ int[] array = [1, 2, 3];
            new Token(tokenTypes.INTEGER, '5'),
            new Token(tokenTypes.RPAREN, ')'),
            new Token(tokenTypes.SEMICOLON, ';'),
-           new Token(tokenTypes.IF, 'if'),
-           new Token(tokenTypes.IDENT, 'sum'),
-           new Token(tokenTypes.GT, '>'),
-           new Token(tokenTypes.IDENT, 'result'),
-           new Token(tokenTypes.OR, 'or'),
-           new Token(tokenTypes.NOT, 'not'),
-           new Token(tokenTypes.TRUE, 'true'),
-           new Token(tokenTypes.LBRACE, '{'),
-           new Token(tokenTypes.RETURN, 'return'),
-           new Token(tokenTypes.TRUE, 'true'),
-           new Token(tokenTypes.RBRACE, '}'),
-           new Token(tokenTypes.ELSE, 'else'),
-           new Token(tokenTypes.LBRACE, '{'),
-           new Token(tokenTypes.RETURN, 'return'),
-           new Token(tokenTypes.INTEGER, '5'),
-           new Token(tokenTypes.MODULO, '%'),
-           new Token(tokenTypes.INTEGER, '2'),
-           new Token(tokenTypes.AND, 'and'),
-           new Token(tokenTypes.INTEGER, '1'),
-           new Token(tokenTypes.IN, 'in'),
-           new Token(tokenTypes.INTEGER, '4'),
-           new Token(tokenTypes.RBRACE, '}'),
            new Token(tokenTypes.FALSE, 'false'),
-           new Token(tokenTypes.INT, 'int'),
-           new Token(tokenTypes.LBRACKET, '['),
-           new Token(tokenTypes.RBRACKET, ']'),
-           new Token(tokenTypes.IDENT, 'array'),
-           new Token(tokenTypes.ASSIGN, '='),
-           new Token(tokenTypes.LBRACKET, '['),
-           new Token(tokenTypes.INTEGER, '1'),
-           new Token(tokenTypes.COMMA, ','),
-           new Token(tokenTypes.INTEGER, '2'),
-           new Token(tokenTypes.COMMA, ','),
-           new Token(tokenTypes.INTEGER, '3'),
-           new Token(tokenTypes.RBRACKET, ']'),
-           new Token(tokenTypes.SEMICOLON, ';'),
-           new Token(tokenTypes.INTEGER, '1'),
-           new Token(tokenTypes.EQ, '=='),
-           new Token(tokenTypes.FALSE, 'false'),
-           new Token(tokenTypes.INTEGER, '2'),
-           new Token(tokenTypes.GT_OR_EQ, '>='),
-           new Token(tokenTypes.INTEGER, '3'),
-           new Token(tokenTypes.INTEGER, '4'),
-           new Token(tokenTypes.LT_OR_EQ, '<='),
-           new Token(tokenTypes.INTEGER, '6'),
-           new Token(tokenTypes.INTEGER, '7'),
-           new Token(tokenTypes.NOT_EQ, '!='),
-           new Token(tokenTypes.TRUE, 'true'),
-           new Token(tokenTypes.BANG, '!'),
-           new Token(tokenTypes.ASTERISK, '*'),
-           new Token(tokenTypes.BSLASH, '/'),
-           new Token(tokenTypes.SLASH, '\\'),
-           new Token(tokenTypes.GT, '>'),
-           new Token(tokenTypes.LT, '<'),
-           new Token(tokenTypes.B_AND, '&'),
-           new Token(tokenTypes.XOR, '^'),
-           new Token(tokenTypes.B_OR, '|'),
-           new Token(tokenTypes.COLON, ':'),
-           new Token(tokenTypes.EOF, ''),
        ];
 
        let lexer = new Lexer(input);
@@ -176,5 +101,104 @@ int[] array = [1, 2, 3];
            assert.equal(token.type, expected.type);
            assert.equal(token.value, expected.value);
        }
+    });
+
+    it('should consume and tokenize operators and delimiters', () => {
+        const input = `if sum > result or not true {
+    return true
+} else {
+   return 5 % 2 and 1 in 4 
+}
+
+int[] array = [1, 2, 3];
+
+1 == false
+
+2 >= 3
+
+4 <= 6
+
+7 != true
+
+5 << 1
+
+4 >> 2
+
+!*/\\><&^|:`;
+        const expectedTokens = [
+            new Token(tokenTypes.IF, 'if'),
+            new Token(tokenTypes.IDENT, 'sum'),
+            new Token(tokenTypes.GT, '>'),
+            new Token(tokenTypes.IDENT, 'result'),
+            new Token(tokenTypes.OR, 'or'),
+            new Token(tokenTypes.NOT, 'not'),
+            new Token(tokenTypes.TRUE, 'true'),
+            new Token(tokenTypes.LBRACE, '{'),
+            new Token(tokenTypes.RETURN, 'return'),
+            new Token(tokenTypes.TRUE, 'true'),
+            new Token(tokenTypes.RBRACE, '}'),
+            new Token(tokenTypes.ELSE, 'else'),
+            new Token(tokenTypes.LBRACE, '{'),
+            new Token(tokenTypes.RETURN, 'return'),
+            new Token(tokenTypes.INTEGER, '5'),
+            new Token(tokenTypes.MODULO, '%'),
+            new Token(tokenTypes.INTEGER, '2'),
+            new Token(tokenTypes.AND, 'and'),
+            new Token(tokenTypes.INTEGER, '1'),
+            new Token(tokenTypes.IN, 'in'),
+            new Token(tokenTypes.INTEGER, '4'),
+            new Token(tokenTypes.RBRACE, '}'),
+            new Token(tokenTypes.INT, 'int'),
+            new Token(tokenTypes.LBRACKET, '['),
+            new Token(tokenTypes.RBRACKET, ']'),
+            new Token(tokenTypes.IDENT, 'array'),
+            new Token(tokenTypes.ASSIGN, '='),
+            new Token(tokenTypes.LBRACKET, '['),
+            new Token(tokenTypes.INTEGER, '1'),
+            new Token(tokenTypes.COMMA, ','),
+            new Token(tokenTypes.INTEGER, '2'),
+            new Token(tokenTypes.COMMA, ','),
+            new Token(tokenTypes.INTEGER, '3'),
+            new Token(tokenTypes.RBRACKET, ']'),
+            new Token(tokenTypes.SEMICOLON, ';'),
+            new Token(tokenTypes.INTEGER, '1'),
+            new Token(tokenTypes.EQ, '=='),
+            new Token(tokenTypes.FALSE, 'false'),
+            new Token(tokenTypes.INTEGER, '2'),
+            new Token(tokenTypes.GT_OR_EQ, '>='),
+            new Token(tokenTypes.INTEGER, '3'),
+            new Token(tokenTypes.INTEGER, '4'),
+            new Token(tokenTypes.LT_OR_EQ, '<='),
+            new Token(tokenTypes.INTEGER, '6'),
+            new Token(tokenTypes.INTEGER, '7'),
+            new Token(tokenTypes.NOT_EQ, '!='),
+            new Token(tokenTypes.TRUE, 'true'),
+            new Token(tokenTypes.INTEGER, '5'),
+            new Token(tokenTypes.LSHIFT, '<<'),
+            new Token(tokenTypes.INTEGER, '1'),
+            new Token(tokenTypes.INTEGER, '4'),
+            new Token(tokenTypes.RSHIFT, '>>'),
+            new Token(tokenTypes.INTEGER, '2'),
+            new Token(tokenTypes.BANG, '!'),
+            new Token(tokenTypes.ASTERISK, '*'),
+            new Token(tokenTypes.BSLASH, '/'),
+            new Token(tokenTypes.SLASH, '\\'),
+            new Token(tokenTypes.GT, '>'),
+            new Token(tokenTypes.LT, '<'),
+            new Token(tokenTypes.B_AND, '&'),
+            new Token(tokenTypes.XOR, '^'),
+            new Token(tokenTypes.B_OR, '|'),
+            new Token(tokenTypes.COLON, ':'),
+            new Token(tokenTypes.EOF, ''),
+        ];
+
+        let lexer = new Lexer(input);
+
+        for (let expected of expectedTokens) {
+            let token = lexer.nextToken();
+
+            assert.equal(token.type, expected.type);
+            assert.equal(token.value, expected.value);
+        }
     });
 });
